@@ -12,7 +12,7 @@
 
 
 
-<title>Second Moment Method</title>
+<title>Earned Value Management</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -336,146 +336,98 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Second Moment Method</h1>
+<h1 class="title toc-ignore">Earned Value Management</h1>
 
 
 
-<p>The second moment method for project risk analysis is a quantitative
-technique used to estimate and manage the uncertainty in project
-outcomes. This method focuses on the first two moments of the
-probability distribution of project outcomes: the mean (or expected
-value) and the variance.</p>
-<div id="steps-in-the-second-moment-method" class="section level2">
-<h2>Steps in the Second Moment Method</h2>
-<div id="identify-project-activities-and-risks" class="section level3">
-<h3>1. Identify Project Activities and Risks</h3>
-<p>List all the activities involved in the project; Identify the risks
-associated with each activity; Estimate the mean (expected value) for
-each activity.</p>
+<p>Earned Value Management (EVM) is a project management technique used
+to measure project performance and progress in an objective manner. It
+integrates project scope, time (schedule), and cost parameters to
+provide accurate forecasts of project performance issues.</p>
+<p>Here are the key components and common equations used in EVM:</p>
+<div id="key-components" class="section level3">
+<h3>Key Components</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Planned Value (PV):</strong> The authorized budget assigned
+to scheduled work.</li>
+<li><strong>Earned Value (EV):</strong> The value of work actually
+performed expressed in terms of the approved budget for that work.</li>
+<li><strong>Actual Cost (AC):</strong> The actual cost incurred for the
+work performed on an activity during a specific time period.</li>
+<li><strong>Budget at Completion (BAC):</strong> The total budget for
+the project.</li>
+</ol>
 </div>
-<div id="determine-the-expected-duration-cost-or-other-metrics-for-each-activity-considering-the-identified-risks" class="section level3">
-<h3>2. Determine the expected duration, cost, or other metrics for each
-activity considering the identified risks</h3>
-<p>The expected value is the average outcome, calculated as the weighted
-sum of all possible outcomes, where the weights are the probabilities of
-those outcomes.</p>
-</div>
-<div id="estimate-variance-and-standard-deviation" class="section level3">
-<h3>3. Estimate Variance and Standard Deviation</h3>
-<p>Calculate the variance of each activity’s duration, cost, or other
-metrics. Variance measures the spread of possible outcomes around the
-mean.</p>
-<p>The standard deviation is the square root of the variance, providing
-a measure of uncertainty in the same units as the original metric.</p>
-</div>
-<div id="aggregate-mean-and-variance" class="section level3">
-<h3>4. Aggregate Mean and Variance</h3>
-<p>For the entire project, aggregate the means of all activities to get
-the project’s overall expected duration, cost, etc.</p>
-<p>Aggregate the variances to get the project’s overall variance. If
-activities are independent, the total variance is the sum of the
-individual variances.</p>
-</div>
-<div id="assess-project-risk" class="section level3">
-<h3>5. Assess Project Risk</h3>
-<p>Use the overall mean and variance to assess the project’s risk. A
-larger variance indicates greater uncertainty and risk.</p>
-<p>Calculate confidence intervals to understand the range within which
-the project outcomes are likely to fall. For example, assuming a normal
-distribution, approximately 95% of outcomes will fall within two
-standard deviations of the mean.</p>
-</div>
-</div>
-<div id="correlation" class="section level2">
-<h2>Correlation</h2>
-<p>When accounting for correlation between tasks, the total variance of
-the project is calculated using both the individual variances and the
-covariances between each pair of activities.</p>
-</div>
-<div id="formulation" class="section level2">
-<h2>Formulation</h2>
-<div id="expected-value-mean" class="section level3">
-<h3>Expected Value (Mean):</h3>
-<p>For a given project activity <span class="math inline">\(i\)</span>,
-the expected value (mean) of the duration, cost, or any other metric
-<span class="math inline">\(X_i\)</span> is:</p>
-<p><span class="math display">\[ E(X_i) = \sum_{j} P_j \cdot X_{ij}
-\]</span></p>
-<p>For the entire project, if there are <span class="math inline">\(n\)</span> activities, the total expected value
-<span class="math inline">\(E(X)\)</span> is:</p>
-<p><span class="math display">\[ E(X) = \sum_{i=1}^{n} E(X_i)
-\]</span></p>
-</div>
-<div id="variance" class="section level3">
-<h3>Variance:</h3>
-<p>The variance of a project activity <span class="math inline">\(i\)</span> is:</p>
-<p><span class="math display">\[ Var(X_i) = \sum_{j} P_j \cdot (X_{ij} -
-E(X_i))^2 \]</span></p>
-</div>
-<div id="covariance" class="section level3">
-<h3>Covariance:</h3>
-<p>The covariance between two activities <span class="math inline">\(X_i\)</span> and <span class="math inline">\(X_j\)</span> is:</p>
-<p><span class="math display">\[ Cov(X_i, X_j) = \sum_{k} P_k \cdot
-(X_{ik} - E(X_i)) \cdot (X_{jk} - E(X_j)) \]</span></p>
-</div>
-<div id="variance-with-correlation" class="section level3">
-<h3>Variance with Correlation:</h3>
-<p>When considering the correlation between activities, the total
-variance <span class="math inline">\(Var(X)\)</span> of the project
-is:</p>
-<p><span class="math display">\[ Var(X) = \sum_{i=1}^{n} Var(X_i) + 2
-\sum_{i=1}^{n-1} \sum_{j=i+1}^{n} Cov(X_i, X_j) \]</span></p>
-</div>
-<div id="correlation-coefficient" class="section level3">
-<h3>Correlation Coefficient:</h3>
-<p>The correlation coefficient <span class="math inline">\(\rho_{ij}\)</span> between activities <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is:</p>
-<p><span class="math display">\[ \rho_{ij} = \frac{Cov(X_i,
-X_j)}{\sigma(X_i) \cdot \sigma(X_j)} \]</span></p>
-</div>
+<div id="common-evm-equations" class="section level3">
+<h3>Common EVM Equations</h3>
+<ol style="list-style-type: decimal">
+<li><p><strong>Cost Variance (CV):</strong></p>
+<p><span class="math display">\[CV = EV - AC\]</span></p>
+<ul>
+<li>Positive CV indicates under budget.</li>
+<li>Negative CV indicates over budget.</li>
+</ul></li>
+<li><p><strong>Schedule Variance (SV):</strong></p>
+<p><span class="math display">\[SV = EV - PV\]</span></p>
+<ul>
+<li>Positive SV indicates ahead of schedule.</li>
+<li>Negative SV indicates behind schedule.</li>
+</ul></li>
+<li><p><strong>Cost Performance Index (CPI):</strong></p>
+<p><span class="math display">\[CPI = \frac{EV}{AC}\]</span></p>
+<ul>
+<li>CPI &gt; 1 indicates cost efficiency.</li>
+<li>CPI &lt; 1 indicates cost inefficiency.</li>
+</ul></li>
+<li><p><strong>Schedule Performance Index (SPI):</strong></p>
+<p><span class="math display">\[SPI = \frac{EV}{PV}\]</span></p>
+<ul>
+<li>SPI &gt; 1 indicates schedule efficiency.</li>
+<li>SPI &lt; 1 indicates schedule inefficiency.</li>
+</ul></li>
+</ol>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>First, load the package:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(PRA)</span></code></pre></div>
-<p>Set the mean vector, variance vector, and correlation matrix for a
-toy project:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>mean <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">9</span>, <span class="dv">16</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>cor_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">0.4</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="dv">1</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<p>Use the Second Moment Method to estimate the results for the project
-and print the results:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">smm</span>(mean, var, cor_mat)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">print</span>(result)</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; $total_mean</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [1] 45</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; $total_var</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [1] 49.4</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; $total_std</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [1] 7.028513</span></span></code></pre></div>
-</div>
-<div id="benefits-and-limitations" class="section level2">
-<h2>Benefits and Limitations</h2>
-<div id="benefits" class="section level3">
-<h3>Benefits</h3>
-<p>Simplicity: The method is relatively straightforward and easy to
-understand.</p>
-<p>Quantitative Insight: Provides a numerical estimate of uncertainty
-and risk.</p>
-</div>
-<div id="limitations" class="section level3">
-<h3>Limitations</h3>
-<p>Normal Distribution Assumption: Often assumes that outcomes are
-normally distributed, which may not accurately represent all real-world
-scenarios.</p>
-<p>Limited to First Two Moments: Ignores higher-order moments such as
-skewness and kurtosis, which can also be important in risk analysis.</p>
-</div>
+<p>Then set the BAC, schedule, and current time period for a toy
+project.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>bac <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>schedule <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.7</span>, <span class="fl">1.0</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>time_period <span class="ot">&lt;-</span> <span class="dv">3</span></span></code></pre></div>
+<p>Calculate the PV and print the results:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>pv <span class="ot">&lt;-</span> <span class="fu">pv</span>(bac, schedule, time_period)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Planned Value (PV):&quot;</span>, pv, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; Planned Value (PV): 40000</span></span></code></pre></div>
+<p>Set the actual % complete and calculate the EV:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>actual_per_complete <span class="ot">&lt;-</span> <span class="fl">0.35</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>ev <span class="ot">&lt;-</span> <span class="fu">ev</span>(bac, actual_per_complete)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Earned Value (EV):&quot;</span>, ev, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; Earned Value (EV): 35000</span></span></code></pre></div>
+<p>Set the actual costs and current time period and calculate the AC to
+date:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>actual_costs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">9000</span>, <span class="dv">18000</span>, <span class="dv">36000</span>, <span class="dv">70000</span>, <span class="dv">100000</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>time_period <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>ac <span class="ot">&lt;-</span> <span class="fu">ac</span>(actual_costs, time_period)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Actual Cost (AC):&quot;</span>, ac, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; Actual Cost (AC): 36000</span></span></code></pre></div>
+<p>Calculate the SV and CV and print the results:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>sv <span class="ot">&lt;-</span> <span class="fu">sv</span>(ev, pv)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Schedule Variance (SV):&quot;</span>, sv, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; Schedule Variance (SV): -5000</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">cv</span>(ev, ac)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cost Variance (CV):&quot;</span>, cv, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; Cost Variance (CV): -1000</span></span></code></pre></div>
+<p>Calculate the SPI and CPI and print the results:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>spi <span class="ot">&lt;-</span> <span class="fu">spi</span>(ev, pv)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Schedule Performance Index (SPI):&quot;</span>, spi, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; Schedule Performance Index (SPI): 0.875</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>cpi <span class="ot">&lt;-</span> <span class="fu">cpi</span>(ev, ac)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cost Performance Index (CPI):&quot;</span>, cpi, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; Cost Performance Index (CPI): 0.9722222</span></span></code></pre></div>
 </div>
 
 
