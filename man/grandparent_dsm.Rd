@@ -16,7 +16,7 @@ Rows represent risks and columns represent resources.}
 \value{
 An S3 object of class \code{"dsm"} with the following components:
 \describe{
-\item{matrix}{The Risk-based 'Grandparent' DSM giving the number of risks shared between each task.}
+\item{matrix}{The Risk-based 'Grandparent' DSM giving the shared risk-exposure score for each task pair.}
 \item{type}{Character string \code{"grandparent"}.}
 \item{n_tasks}{Number of tasks (columns in S).}
 \item{n_resources}{Number of resources (rows in S).}
@@ -26,13 +26,24 @@ An S3 object of class \code{"dsm"} with the following components:
 \description{
 This function computes the Risk-based 'Grandparent' Design Structure Matrix (DSM)
 from given Resource-Task Matrix 'S' and Risk-Resource Matrix 'R'.
-The 'Grandparent' DSM indicates the number of risks shared between each pair of
-tasks in a project.
+The 'Grandparent' DSM scores the risk exposure that each pair of tasks shares
+through the resource chain. Entry \eqn{G_{jk}} sums, over risks, the product of
+the risk-to-task path counts \eqn{(RS)_{ij}} and \eqn{(RS)_{ik}}, so a shared
+risk is weighted by the number of common resources carrying it; this reduces to
+a plain count of shared risks only when \eqn{RS} is binary.
 }
 \examples{
 # Set the S and R matrices and print the results.
-S <- matrix(c(1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1), nrow = 3, ncol = 4)
-R <- matrix(c(1, 1, 0, 1, 0, 0), nrow = 2, ncol = 3)
+S <- matrix(c(1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1), nrow = 3, ncol = 4,
+            dimnames = list(
+              c("Resource-1", "Resource-2", "Resource-3"),
+              c("Task-1", "Task-2", "Task-3", "Task-4")
+            ))
+R <- matrix(c(1, 1, 0, 1, 0, 0), nrow = 2, ncol = 3,
+            dimnames = list(
+              c("Risk-1", "Risk-2"),
+              c("Resource-1", "Resource-2", "Resource-3")
+            ))
 cat("Resource-Task Matrix (3 resources x 4 tasks):\n")
 print(S)
 cat("\nRisk-Resource Matrix (2 risks x 3 resources):\n")

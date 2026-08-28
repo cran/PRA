@@ -3,6 +3,12 @@
 #' This function calculates the posterior probability of a risk event 'R' occurring
 #' based on observations of multiple root causes and their associated conditional probabilities.
 #'
+#' @details Observed causes are fixed to their conditional probability
+#' (\eqn{P(R \mid C_i)} if present, \eqn{P(R \mid \bar{C}_i)} if absent) while
+#' unobserved causes (\code{NA}) keep their marginal contribution. The causes are
+#' then combined with the same noisy-OR as [risk_prob()], so the posterior is on
+#' the same scale as the prior and observing an aggravating cause raises it.
+#'
 #' @srrstats {G1.0} *Software lists primary reference from published academic literature.*
 #' @srrstats {G1.1} *Software is the first implementation within **R** of the algorithm which has previously been implemented in other languages or contexts.*
 #' @srrstats {G1.4} *Software uses [`roxygen2`](https://roxygen2.r-lib.org/) to document all functions.*
@@ -67,26 +73,24 @@ risk_post_prob <- function(cause_probs, risks_given_causes, risks_given_not_caus
     stop("All values in observed_causes must be 0, 1, or NA.")
   }
 
-  # Initialize posterior probability of the risk event
-  numerator <- 1
-  denominator <- 1
-
+  # Contribution of each cause to the risk event. An observed cause is fixed
+  # to its conditional probability P(R | C_i) (present) or P(R | not C_i)
+  # (absent); an unobserved cause (NA) uses its marginal, as in risk_prob().
+  contributions <- numeric(length(cause_probs))
   for (i in seq_along(cause_probs)) {
-    if (!is.na(observed_causes[i])) {
-      if (observed_causes[i] == 1) {
-        numerator <- numerator * risks_given_causes[i] * cause_probs[i]
-        denominator <- denominator * (risks_given_causes[i] * cause_probs[i] +
-          risks_given_not_causes[i] * (1 - cause_probs[i]))
-      } else {
-        numerator <- numerator * risks_given_not_causes[i] * (1 - cause_probs[i])
-        denominator <- denominator * (risks_given_causes[i] * cause_probs[i] +
-          risks_given_not_causes[i] * (1 - cause_probs[i]))
-      }
+    if (is.na(observed_causes[i])) {
+      contributions[i] <- risks_given_causes[i] * cause_probs[i] +
+        risks_given_not_causes[i] * (1 - cause_probs[i])
+    } else if (observed_causes[i] == 1) {
+      contributions[i] <- risks_given_causes[i]
+    } else {
+      contributions[i] <- risks_given_not_causes[i]
     }
   }
 
-  # Return the normalized posterior probability
-  return(numerator / denominator)
+  # Combine via the noisy-OR, on the same scale as risk_prob(), so that
+  # observing an aggravating cause raises the posterior risk probability.
+  return(1 - prod(1 - contributions))
 }
 
 #' Posterior Cost Probability Density.
@@ -110,11 +114,24 @@ risk_post_prob <- function(cause_probs, risks_given_causes, risks_given_not_caus
 #' @srrstats {G2.16} *Implements checks for Inf/-Inf values via is.infinite() prior to processing.*
 #' @srrstats {G5.2a} *Each error message produced by stop() is unique.*
 #'
+#' @details An observed risk is fixed: a risk observed to have occurred always
+#' contributes its cost, and one observed not to have occurred never does. An
+#' unobserved risk (`NA`) is drawn from its prior probability when `risk_probs`
+#' is supplied, which is the same treatment [risk_post_prob()] gives an
+#' unobserved cause. When `risk_probs` is `NULL` there is no prior to draw from,
+#' so unobserved risks contribute nothing and the result is a posterior over the
+#' observed risks alone; the function warns in that case, because ignoring an
+#' unobserved risk understates the cost.
+#'
 #' @param num_sims Number of random samples to draw from the posterior distribution.
 #' @param observed_risks A vector of observed values for each risk event 'R_i' (1 if observed, 0 if not observed, NA if unobserved).
 #' @param means_given_risks A vector of means of the normal distribution for cost 'A' given each risk event 'R_i'.
 #' @param sds_given_risks A vector of standard deviations of the normal distribution for cost 'A' given each risk event 'R_i'.
 #' @param base_cost The baseline cost given no risk event occurs.
+#' @param risk_probs Optional vector of prior probabilities for each risk event,
+#' used to draw the risks left unobserved (`NA`) in `observed_risks`. If `NULL`
+#' (default), unobserved risks are treated as not occurring and a warning is
+#' issued.
 #' @return A numeric vector of random samples from the posterior distribution of costs.
 #' @references
 #' Damnjanovic, Ivan, and Kenneth Reinschmidt. Data analytics for engineering and
@@ -126,17 +143,19 @@ risk_post_prob <- function(cause_probs, risks_given_causes, risks_given_not_caus
 #' means_given_risks <- c(10000, 15000, 5000)
 #' sds_given_risks <- c(2000, 1000, 1000)
 #' base_cost <- 2000
+#' # The second risk is unobserved, so it is drawn from its prior probability.
 #' posterior_samples <- cost_post_pdf(
 #'   num_sims = num_sims,
 #'   observed_risks = observed_risks,
 #'   means_given_risks = means_given_risks,
 #'   sds_given_risks = sds_given_risks,
-#'   base_cost = base_cost
+#'   base_cost = base_cost,
+#'   risk_probs = c(0.3, 0.5, 0.2)
 #' )
 #' hist(posterior_samples, breaks = 30, col = "skyblue", main = "Posterior Cost PDF", xlab = "Cost")
-#' @importFrom stats rnorm
+#' @importFrom stats rnorm rbinom
 #' @export
-cost_post_pdf <- function(num_sims, observed_risks, means_given_risks, sds_given_risks, base_cost = 0) {
+cost_post_pdf <- function(num_sims, observed_risks, means_given_risks, sds_given_risks, base_cost = 0, risk_probs = NULL) {
   # Validate inputs
   if (num_sims <= 0 || !is.numeric(num_sims)) stop("num_sims must be a positive integer.")
   if (any(is.nan(means_given_risks)) || any(is.nan(sds_given_risks))) {
@@ -159,19 +178,51 @@ cost_post_pdf <- function(num_sims, observed_risks, means_given_risks, sds_given
     stop("observed_risks, means_given_risks, and sds_given_risks must have the same length.")
   }
   if (any(sds_given_risks < 0)) stop("Standard deviations must be non-negative.")
+  if (!is.null(risk_probs)) {
+    if (any(is.nan(risk_probs))) stop("risk_probs must not contain NaN values.")
+    if (anyNA(risk_probs)) stop("risk_probs must not contain NA values.")
+    if (any(is.infinite(risk_probs))) stop("risk_probs must not contain infinite values.")
+    if (length(risk_probs) != length(observed_risks)) {
+      stop("risk_probs must have the same length as observed_risks.")
+    }
+    if (any(risk_probs < 0 | risk_probs > 1)) {
+      stop("All values in risk_probs must be between 0 and 1.")
+    }
+  }
 
   # Number of risk events
   num_risks <- length(observed_risks)
 
+  # Warn when an unobserved risk is silently dropped for want of a prior.
+  if (is.null(risk_probs) && anyNA(observed_risks)) {
+    warning(
+      "Unobserved risks (NA) are treated as not occurring because risk_probs ",
+      "was not supplied, which understates the cost. Supply risk_probs to draw ",
+      "them from their prior instead."
+    )
+  }
+
   # Initialize cost samples with base cost
   samples <- rep(base_cost, num_sims)
 
-  # Iterate over each risk event
+  # An observed risk is fixed; an unobserved one is drawn from its prior, the
+  # same treatment risk_post_prob() gives an unobserved cause.
   for (i in seq_len(num_risks)) {
-    if (!is.na(observed_risks[i]) && observed_risks[i] == 1) {
-      # Add cost samples for the observed risk event
-      samples <- samples + rnorm(num_sims, mean = means_given_risks[i], sd = sds_given_risks[i])
+    occurred <- if (is.na(observed_risks[i])) {
+      if (is.null(risk_probs)) {
+        rep(0, num_sims)
+      } else {
+        rbinom(num_sims, size = 1, prob = risk_probs[i])
+      }
+    } else {
+      rep(observed_risks[i], num_sims)
     }
+
+    samples <- samples + ifelse(
+      occurred == 1,
+      rnorm(num_sims, mean = means_given_risks[i], sd = sds_given_risks[i]),
+      0
+    )
   }
 
   return(samples)
